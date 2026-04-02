@@ -24,13 +24,13 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 app.get("/callback", async (req, res) => {
   try {
     const code = req.query.code;
-    const user = req.query.state; // we passed user_id here
+    const user = req.query.state;
 
     if (!code) {
       return res.send("No code received");
     }
 
-    // Exchange code for token
+    // Exchange code → token
     const tokenResponse = await axios.post(
       `https://${AUTH0_DOMAIN}/oauth/token`,
       {
@@ -47,22 +47,73 @@ app.get("/callback", async (req, res) => {
 
     const tokenData = tokenResponse.data;
 
-    // Store token in vault
+    // Store token
     tokenVault.set(user, {
       access_token: tokenData.access_token,
       expires_in: tokenData.expires_in,
       created_at: Date.now()
     });
 
+    console.log("Token stored for user:", user);
+
     res.send("Login successful. You can return to Zoho Cliq.");
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("Auth Error:", err.response?.data || err.message);
     res.send("Error during authentication");
   }
 });
 
 /************************************************************
-  GET TOKEN ROUTE (Called by Deluge)
+  CHECK TOKEN ROUTE (Used by Deluge)
+************************************************************/
+app.get("/check-token", (req, res) => {
+  const user = req.query.user_id;
+
+  if (!tokenVault.has(user)) {
+    return res.json({ authenticated: false });
+  }
+
+  res.json({ authenticated: true });
+});
+
+/************************************************************
+  GITHUB REPOS ROUTE (NEW)
+************************************************************/
+app.get("/github/repos", async (req, res) => {
+  const user = req.query.user_id;
+
+  if (!tokenVault.has(user)) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  const tokenData = tokenVault.get(user);
+  const token = tokenData.access_token;
+
+  try {
+    const githubResponse = await axios.get(
+      "https://api.github.com/user/repos",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    // Optional: clean response
+    const repos = githubResponse.data.map(repo => ({
+      name: repo.name,
+      url: repo.html_url
+    }));
+
+    res.json(repos);
+  } catch (err) {
+    console.error("GitHub API Error:", err.response?.data || err.message);
+    res.status(500).json({ error: "GitHub API failed" });
+  }
+});
+
+/************************************************************
+  OPTIONAL: GET TOKEN (DEBUG)
 ************************************************************/
 app.get("/get-token", (req, res) => {
   const user = req.query.user;
