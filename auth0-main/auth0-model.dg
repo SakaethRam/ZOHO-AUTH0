@@ -1,0 +1,122 @@
+/************************************************************
+SNIPER βeta v.1 — AUTH0 SECURITY LAYER
+Handles authentication, session validation, and access control
+*************************************************************/
+user_id = zoho.loginuserid;
+
+// =========================================================
+// AUTH0 CONFIG FETCH
+// =========================================================
+config_url = "https://zoho-ave.onrender.com/auth0/config?user_id=" + user_id;
+
+configResp = invokeurl
+[
+	url :config_url
+	type :GET
+	detailed:true
+];
+
+if(configResp.get("responseCode") == 200)
+{
+	configMap = configResp.get("responseText");
+	AUTH0_DOMAIN = configMap.get("domain");
+	AUTH0_CLIENT_ID = configMap.get("client_id");
+	AUTH0_AUDIENCE = configMap.get("audience");
+	REDIRECT_URI = configMap.get("redirect_uri");
+}
+
+// =========================================================
+// INPUT
+// =========================================================
+raw_lower = message.trim().toLowerCase();
+response = Map();
+
+// =========================================================
+// LOGIN INITIATION
+// =========================================================
+if(raw_lower.contains("login"))
+{
+	connection = "";
+
+	if(raw_lower.contains("github"))
+	{
+		connection = "github";
+	}
+	else if(raw_lower.contains("google"))
+	{
+		connection = "google-oauth2";
+	}
+
+	login_url = "https://" + AUTH0_DOMAIN + "/authorize"
+	+ "?response_type=code"
+	+ "&client_id=" + AUTH0_CLIENT_ID
+	+ "&redirect_uri=" + REDIRECT_URI
+	+ "&scope=openid profile email"
+	+ "&state=" + user_id;
+
+	if(connection != "")
+	{
+		login_url = login_url + "&connection=" + connection;
+	}
+
+	response.put("text",
+	"Authentication required.\n\n" +
+	"Use the link below to securely authenticate your session:\n" +
+	login_url +
+	"\n\nReturn here after completing authentication."
+	);
+
+	return response;
+}
+
+// =========================================================
+// LOGOUT
+// =========================================================
+if(raw_lower == "logout")
+{
+	response.put("text","Session terminated successfully.");
+	return response;
+}
+
+// =========================================================
+// TOKEN VALIDATION
+// =========================================================
+isLoggedIn = false;
+
+token_check_url = "https://your-render-app.onrender.com/check-token?user_id=" + user_id;
+
+checkResp = invokeurl
+[
+	url :token_check_url
+	type :GET
+	detailed:true
+];
+
+if(checkResp.get("responseCode") == 200)
+{
+	respMap = checkResp.get("responseText");
+
+	if(respMap != null && respMap.containsKey("authenticated"))
+	{
+		isLoggedIn = respMap.get("authenticated");
+	}
+}
+
+// =========================================================
+// ACCESS CONTROL ENFORCEMENT
+// =========================================================
+if(!isLoggedIn)
+{
+	response.put("text",
+	"Access restricted. Please authenticate using 'login' to continue."
+	);
+	return response;
+}
+
+// =========================================================
+// SECURE PASS-THROUGH FLAG
+// =========================================================
+response.put("auth","verified");
+response.put("user_id",user_id);
+
+return response;

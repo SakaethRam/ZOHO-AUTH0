@@ -1,0 +1,78 @@
+/************************************************************
+SNIPER βeta v.1 — AI INTERACTION LAYER
+Handles intelligent query processing post-authentication
+*************************************************************/
+
+// =========================================================
+// INPUT
+// =========================================================
+raw = message.trim();
+response = Map();
+
+// =========================================================
+// AUTH CONTEXT CHECK (Expected from Layer 1)
+// =========================================================
+if(input.get("auth") != "verified")
+{
+	response.put("text","Unauthorized request context.");
+	return response;
+}
+
+// =========================================================
+// QUERY EXTRACTION
+// =========================================================
+spaceIndex = raw.indexOf(" ");
+
+if(spaceIndex == -1)
+{
+	question = raw;
+}
+else
+{
+	question = raw.substring(spaceIndex + 1).trim();
+}
+
+// =========================================================
+// GENERIC AI ENGINE CALL (ABSTRACTED)
+// =========================================================
+ai_url = "https://your-ai-gateway.onrender.com/generate";
+
+headers = Map();
+headers.put("Content-Type","application/json");
+
+body = Map();
+body.put("query",question);
+body.put("user_id",input.get("user_id"));
+
+aiResponse = invokeurl
+[
+	url :ai_url
+	type :POST
+	parameters:body.toString()
+	headers:headers
+	detailed:true
+];
+
+// =========================================================
+// RESPONSE HANDLING
+// =========================================================
+answer = "";
+
+if(aiResponse.get("responseCode") == 200)
+{
+	respMap = aiResponse.get("responseText");
+
+	if(respMap != null && respMap.containsKey("output"))
+	{
+		answer = respMap.get("output").toString();
+	}
+}
+
+if(answer.isEmpty())
+{
+	answer = "Unable to process the request at the moment.";
+}
+
+response.put("text",answer);
+
+return response;
