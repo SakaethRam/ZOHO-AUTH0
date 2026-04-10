@@ -4,6 +4,8 @@
 
 This module implements a secure authentication layer using Auth0, designed for integration with Zoho Cliq and backend services. The architecture follows a decoupled approach, separating client-side orchestration from backend authentication and session management.
 
+<img width="1536" height="1024" alt="SNIPER" src="https://github.com/user-attachments/assets/0851b719-659f-4bc6-bccc-aeb97ba11af9" />
+
 ---
 
 ## Project Structure
