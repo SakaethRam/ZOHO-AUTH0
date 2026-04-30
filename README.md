@@ -1,10 +1,10 @@
-# SNIPER Beta v1: Auth0 Integration Module
+# ZOHO-AUTH0: Auth0 Integration Module
 
 ## Overview
 
 This module implements a secure authentication layer using Auth0, designed for integration with Zoho Cliq and backend services. The architecture follows a decoupled approach, separating client-side orchestration from backend authentication and session management.
 
-### View Product Walk-Through: [SNIPER Beta](https://vimeo.com/1179955289?share=copy&fl=sv&fe=ci)
+#### View ZOHO-AUTH0 Walk-Through: [ZOHO-AUTH0](https://vimeo.com/1179955289?share=copy&fl=sv&fe=ci)
 
 <img width="1536" height="1024" alt="SNIPER" src="https://github.com/user-attachments/assets/0851b719-659f-4bc6-bccc-aeb97ba11af9" />
 
