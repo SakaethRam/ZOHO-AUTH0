@@ -127,3 +127,9 @@ This module is designed for:
 * Secure AI-driven workflows
 * SaaS authentication systems
 * Modular AI and authentication pipelines
+
+---
+
+## License & contribution
+
+ZOHO-AUTH0 is distributed under the terms defined in `LICENSE`.
