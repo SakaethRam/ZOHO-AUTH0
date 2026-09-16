@@ -1,0 +1,13 @@
+{
+  "environments": {
+    "local": {
+      "backendUrl": "http://localhost:8000",
+      "description": "Points at the FastAPI test server in auth0-main. In-memory only; see docs/SECURITY.md."
+    },
+    "production": {
+      "backendUrl": "https://<your-service>.onrender.com",
+      "description": "Points at the Node.js backend in auth0-backend, deployed on Render."
+    }
+  },
+  "activeEnvironment": "production"
+}
