@@ -1,0 +1,23 @@
+{
+  "locale": ["en"],
+  "service": "CLIQ",
+  "storage": false,
+  "whiteListedDomains": [
+    "auth0.com",
+    "onrender.com"
+  ],
+  "connectors": [
+    {
+      "connectionLinkName": "auth0connection",
+      "connectionName": "auth0connection",
+      "serviceName": "auth0",
+      "userAccess": true,
+      "isUserDefinedService": true,
+      "scope": []
+    }
+  ],
+  "handlers": {
+    "auth": "auth_layer.dg",
+    "ai": "ai_layer.dg"
+  }
+}
