@@ -1,0 +1,33 @@
+version: "3.9"
+
+# Runs the production Node.js backend and the FastAPI test server side
+# by side, so their contracts can be compared directly against each
+# other during development. Neither is meant to talk to the other;
+# point your local Deluge testing at whichever one you're validating.
+
+services:
+  auth0-backend:
+    build:
+      context: ./auth0-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID:-}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET:-}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
+      - PORT=3000
+    restart: unless-stopped
+
+  auth0-test-server:
+    build:
+      context: ./auth0-main
+    ports:
+      - "8000:8000"
+    environment:
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID:-}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET:-}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
+      - PORT=8000
+    restart: unless-stopped
