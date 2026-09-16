@@ -6,8 +6,6 @@ This module implements a secure authentication layer using Auth0, designed for i
 
 #### Here is the ZOHO-AUTH0 MVP Orientation video: [ZOHO-AUTH0](https://vimeo.com/1179955289?share=copy&fl=sv&fe=ci)
 
-<img width="1536" height="1024" alt="SNIPER" src="https://github.com/user-attachments/assets/0851b719-659f-4bc6-bccc-aeb97ba11af9" />
-
 ---
 
 ## Project Structure
