@@ -1,10 +1,8 @@
 # ZOHO-AUTH0: Auth0 Integration Module
 
-## Overview
+This module implements a secure authentication layer using Auth0, designed for integration with Zoho Cliq and backend services. The architecture follows a decoupled approach, separating client-side orchestration from backend authentication and session management. Here is the ZOHO-AUTH0 MVP Orientation video: [@ZohoAuth0](https://vimeo.com/1179955289?share=copy&fl=sv&fe=ci)
 
-This module implements a secure authentication layer using Auth0, designed for integration with Zoho Cliq and backend services. The architecture follows a decoupled approach, separating client-side orchestration from backend authentication and session management.
-
-#### Here is the ZOHO-AUTH0 MVP Orientation video: [ZOHO-AUTH0](https://vimeo.com/1179955289?share=copy&fl=sv&fe=ci)
+<img width="1800" height="1000" alt="ZREX ZOHO" src="https://github.com/user-attachments/assets/3a4a883b-a348-4a85-bcf0-d501c01d9969" />
 
 ---
 
